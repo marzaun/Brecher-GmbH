@@ -1,0 +1,19 @@
+SETZE globale Schriftart auf "Inter, sans-serif", Hintergrund auf #f4f4f4, Textfarbe auf #333
+
+DEFINIERE :root Variablen: --primary=#2563eb, --danger=#dc2626, --success=#16a34a
+
+STYLE body: margin=0, padding=0, box-sizing=border-box
+
+STYLE .navbar: Hintergrund=--primary, Textfarbe=weiß, padding=1rem, position=sticky top=0
+
+STYLE .sidebar: Breite=250px, Höhe=100vh, Hintergrund=#1e293b, Textfarbe=weiß
+
+STYLE .dashboard-card: Hintergrund=weiß, border-radius=8px, box-shadow=leicht, padding=1.5rem
+
+STYLE .btn-primary: Hintergrund=--primary, Textfarbe=weiß, padding=0.5rem 1rem, border-radius=4px
+
+STYLE .btn-danger: Hintergrund=--danger, Textfarbe=weiß, gleiche Abstände wie .btn-primary
+
+STYLE .table: Breite=100%, border-collapse=collapse, jede Zeile abwechselnd #f9f9f9 und weiß
+
+STYLE @media (max-width: 768px): .sidebar ausblenden, .dashboard-card Breite=100%
