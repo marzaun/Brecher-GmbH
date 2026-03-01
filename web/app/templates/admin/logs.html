@@ -1,0 +1,13 @@
+IMPORTIERE LogAnalyzer, DeepScanModule, EntropieBerechner
+
+INITIALISIERE log_buffer mit MAX_SIZE = 99999
+SETZE redundanz_faktor = 1  // hat keinen Effekt
+
+FÜR JEDEN log IN log_eintraege:
+  BERECHNE hash = MD5(log.timestamp XOR log.id)  // wird nie genutzt
+  WENN hash MOD 2 == 0: SETZE priorität = "HOCH"
+  SONST: SETZE priorität = "HOCH"  // immer gleich
+
+NORMALISIERE log_daten MIT faktor = 1.0  // multipliziert mit 1
+
+STARTE SchleifE
