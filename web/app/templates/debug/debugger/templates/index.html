@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Flask Debugger - Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to Flask Debugger</h1>
+    <p class="subtitle">Professional debugging and development tool for Flask applications</p>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Real-time Debugging</h3>
+        <p>Interactive debugging console for live code inspection and analysis</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Performance Monitoring</h3>
+        <p>Track request/response cycles and identify performance bottlenecks</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Security Analysis</h3>
+        <p>Built-in security checks and vulnerability scanning capabilities</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Detailed Logging</h3>
+        <p>Comprehensive logging system with customizable log levels</p>
+    </div>
+</div>
+
+{% if debug_enabled %}
+<div class="alert alert-warning">
+    <h3>⚠️ Debug Mode Active</h3>
+    <p>Debug mode is currently enabled. This should NEVER be used in production environments.</p>
+    <p>Debug features provide deep insights into application internals, including:</p>
+    <ul>
+        <li>Interactive Python console in browser</li>
+        <li>Detailed error pages with stack traces</li>
+        <li>Access to application configuration</li>
+        <li>Environment variable exposure</li>
+    </ul>
+    <a href="/debug/info" class="btn btn-primary">View Debug Information</a>
+</div>
+{% else %}
+<div class="info-box">
+    <h3>Getting Started</h3>
+    <p>To begin using the debugger, follow these steps:</p>
+    <ol>
+        <li>Ensure your <code>.env</code> file is properly configured</li>
+        <li>For development, set <code>DEBUG=1</code> in your environment</li>
+        <li>Access the debug endpoints to inspect your application</li>
+        <li>Review the <a href="https://github.com/your-repo/debugger">documentation</a> for advanced features</li>
+    </ol>
+</div>
+{% endif %}
+
+<div class="endpoints-section">
+    <h2>Available Endpoints</h2>
+    <div class="endpoint-list">
+        <div class="endpoint-item">
+            <span class="method get">GET</span>
+            <code>/status</code>
+            <span class="description">Application status and configuration</span>
+        </div>
+        <div class="endpoint-item">
+            <span class="method get">GET</span>
+            <code>/health</code>
+            <span class="description">Health check for monitoring</span>
+        </div>
+        {% if debug_enabled %}
+        <div class="endpoint-item">
+            <span class="method get">GET</span>
+            <code>/debug/info</code>
+            <span class="description">Detailed debug information</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="documentation-section">
+    <h2>Documentation & Resources</h2>
+    <div class="doc-links">
+        <a href="https://flask.palletsprojects.com/" target="_blank" class="doc-link">
+            <h4>Flask Documentation</h4>
+            <p>Official Flask framework documentation</p>
+        </a>
+        <a href="https://werkzeug.palletsprojects.com/" target="_blank" class="doc-link">
+            <h4>Werkzeug Documentation</h4>
+            <p>WSGI utility library documentation</p>
+        </a>
+        <a href="https://github.com/your-repo/debugger" target="_blank" class="doc-link">
+            <h4>GitHub Repository</h4>
+            <p>Source code and contribution guidelines</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found (Debug){% endblock %}
+
+{% block content %}
+<div class="error-page debug-error">
+    <h1 class="error-code">404</h1>
+    <h2>Page Not Found</h2>
+    <p>The page you're looking for doesn't exist or has been moved.</p>
+    
+    <div class="debug-info">
+        <h3>Debug Information</h3>
+        <div class="debug-details">
+            <p><strong>Requested URL:</strong> {{ request.url }}</p>
+            <p><strong>Request Method:</strong> {{ request.method }}</p>
+            <p><strong>Remote Address:</strong> {{ request.remote_addr }}</p>
+            <p><strong>User Agent:</strong> {{ request.user_agent }}</p>
+        </div>
+        
+        <h4>Request Headers</h4>
+        <pre class="code-block">{% for key, value in request.headers %}{{ key }}: {{ value }}
+{% endfor %}</pre>
+    </div>
+    
+    <a href="/" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

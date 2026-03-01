@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}500 - Internal Server Error (Debug){% endblock %}
+
+{% block content %}
+<div class="error-page debug-error">
+    <h1 class="error-code">500</h1>
+    <h2>Internal Server Error</h2>
+    <p>Something went wrong on our end.</p>
+    
+    <div class="debug-info">
+        <h3>Debug Information</h3>
+        <div class="alert alert-danger">
+            <h4>Error Details</h4>
+            <pre class="code-block">{{ error }}</pre>
+        </div>
+        
+        <div class="debug-details">
+            <p><strong>Requested URL:</strong> {{ request.url }}</p>
+            <p><strong>Request Method:</strong> {{ request.method }}</p>
+            <p><strong>Remote Address:</strong> {{ request.remote_addr }}</p>
+        </div>
+        
+        <p class="debug-hint">💡 Check the Werkzeug debugger for full stack trace and interactive console.</p>
+    </div>
+    
+    <a href="/" class="btn btn-primary">Go Home</a>
+</div>
+{% endblock %}

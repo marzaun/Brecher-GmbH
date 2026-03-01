@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Repository – portal-debug{% endblock %}
+{% block content %}
+<style>
+    .repo-container {
+        background: #0d1117;
+        color: #c9d1d9;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    }
+    .repo-container h1, .repo-container h2, .repo-container h3 {
+        color: #c9d1d9;
+        border-bottom: 1px solid #21262d;
+        padding-bottom: 0.3em;
+    }
+    .repo-container code {
+        background: #161b22;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        color: #79c0ff;
+    }
+    .repo-container pre {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 1rem;
+        color: #c9d1d9;
+        overflow-x: auto;
+    }
+    .repo-container a { color: #58a6ff; }
+    .repo-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #30363d;
+    }
+    .repo-header .badge-private {
+        background: #1f6feb;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+    }
+    .tree-view {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-family: monospace;
+        font-size: 0.9rem;
+    }
+    .tree-view .folder { color: #79c0ff; }
+    .tree-view .file { color: #c9d1d9; }
+</style>
+
+<div class="repo-container">
+    <div class="repo-header">
+        <svg height="16" width="16" viewBox="0 0 16 16" fill="#8b949e">
+            <path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1h-8a1 1 0 00-1 1v6.708A2.486 2.486 0 014.5 9h8.5V1.5zm-8 11a1 1 0 001-1h6.5v2H4.5a1 1 0 01-1-1z"/>
+        </svg>
+        <strong>intern / portal-debug</strong>
+        <span class="badge-private">Private</span>
+    </div>
+
+    <h1>Brecher GmbH – Portal Debug-Konfiguration</h1>
+    
+    <p>Internes Repository für Debug- und Wartungskonfiguration des Firmenportals.</p>
+    
+    <blockquote style="border-left: 3px solid #f0883e; padding-left: 1rem; color: #f0883e;">
+        ⚠️ ACHTUNG: Dieses Repository enthält sensible Konfigurationsdaten. Nicht an Externe weitergeben!
+    </blockquote>
+
+    <h2>Projektstruktur</h2>
+    <div class="tree-view">
+        <div><span class="folder">📁 web/</span> – Flask Web-Anwendung (Port 8080)</div>
+        <div>&nbsp;&nbsp;<span class="folder">📁 app/</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">📁 routes/</span> – Routen (public, auth, admin, internal, debug)</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">📁 templates/</span> – Jinja2 Templates</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="folder">📁 static/</span> – Statische Dateien</div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="file">📄 otp.py</span> – OTP-Token-Generator</div>
+        <div>&nbsp;&nbsp;<span class="file">📄 debug_user.txt</span> – Debug-Account Zugangsdaten</div>
+        <div><span class="folder">📁 binary-service/</span> – C++ Diagnose-Service (Port 9999)</div>
+        <div>&nbsp;&nbsp;<span class="file">📄 server.cpp</span> – Hauptprogramm</div>
+        <div><span class="folder">📁 database/</span> – PostgreSQL Schema &amp; Seed</div>
+        <div><span class="file">📄 docker-compose.yml</span></div>
+        <div><span class="file">📄 .env</span> – Umgebungsvariablen</div>
+    </div>
+
+    <h2>Debug-Service Konfiguration</h2>
+    <p>Der Debug-Modus wird über den Binary-Service (Port 9999) aktiviert.</p>
+
+    <h3>Aktivierungs-PIN</h3>
+    <pre>
+# Debug-PIN für den Diagnose-Service
+# Wird im Debug-Panel des Webportals eingegeben
+DEBUG_SERVICE_PIN=7834
+    </pre>
+
+    <h3>Verfügbare Befehle (Binary-Service)</h3>
+    <pre>
+# Verbindung: nc &lt;host&gt; 9999
+PING              - Verbindungstest
+DEBUG &lt;PIN&gt;       - Debug-Modus aktivieren (PIN: siehe oben)
+AUTH &lt;user&gt; &lt;otp&gt; - Admin-Authentifizierung + Diagnose
+QUIT              - Verbindung beenden
+    </pre>
+
+    <h2>Authentifizierung</h2>
+    
+    <h3>OTP-Token (Admin-Zugang)</h3>
+    <p>Für den Admin-Login wird ein zeitbasiertes OTP benötigt. Der Token wird
+    sowohl vom Web-Frontend als auch vom Binary-Service validiert.</p>
+
+    <h4>Algorithmus</h4>
+    <pre>
+# Schritt 1: Zeitschritt berechnen (5-Minuten-Fenster)
+time_step = unix_timestamp // 300
+
+# Schritt 2: Eingabestring zusammensetzen
+raw = "{username}:BRECHER_GEHEIM_2026:{time_step}"
+
+# Schritt 3: SHA-256 Hash berechnen
+digest = sha256(raw).hexdigest()
+
+# Schritt 4: Erste 6 Ziffern aus dem Hex-Digest extrahieren
+otp = [nur Ziffern aus digest][:6]
+
+# Schritt 5: Falls weniger als 6 Ziffern, mit '0' auffüllen
+    </pre>
+
+    <h4>Beispiel-Implementierung (Python)</h4>
+    <pre>
+import hashlib, time
+
+def generate_otp(username):
+    time_step = int(time.time()) // 300
+    raw = f"{username}:BRECHER_GEHEIM_2026:{time_step}"
+    digest = hashlib.sha256(raw.encode()).hexdigest()
+    otp = ''.join(c for c in digest if c.isdigit())[:6]
+    return otp.ljust(6, '0')
+
+# Verwendung:
+# token = generate_otp("admin")
+    </pre>
+
+    <h2>Rollen-System</h2>
+    <table style="width:100%; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid #30363d;">
+            <th style="padding: 8px; text-align: left;">Rolle</th>
+            <th style="padding: 8px; text-align: left;">Berechtigung</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #21262d;">
+            <td style="padding: 8px;"><code>user</code></td>
+            <td style="padding: 8px;">Öffentliche Seiten, Gästebuch, Debug-Panel (Misconfiguration)</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #21262d;">
+            <td style="padding: 8px;"><code>employee</code></td>
+            <td style="padding: 8px;">Interne Tools, Lieferlisten, Mitarbeiter-Bereich</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #21262d;">
+            <td style="padding: 8px;"><code>admin</code></td>
+            <td style="padding: 8px;">Vollzugriff, Benutzerverwaltung, Logs, Binary-Tool (OTP erforderlich)</td>
+        </tr>
+    </table>
+
+    <h2>Bekannte Issues</h2>
+    <ul>
+        <li><code>#42</code> – Debug-Panel für alle eingeloggten User sichtbar (Prio: Low) </li>
+        <li><code>#58</code> – Debug-File-Viewer: Pfad-Validierung fehlt</li>
+        <li><code>#63</code> – Lieferlisten-Suche: Parameterisierte Queries ausstehend</li>
+        <li><code>#71</code> – OTP-Secret sollte rotiert werden</li>
+    </ul>
+
+    <!-- CTF Flag Stage 1 -->
+    <div style="margin-top: 2rem; padding: 1rem; background: #161b22; border: 1px solid #238636; border-radius: 6px;">
+        <p style="color: #3fb950; margin: 0;">🏁 <strong>{{ flag }}</strong></p>
+    </div>
+</div>
+{% endblock %}
