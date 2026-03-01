@@ -1,0 +1,17 @@
+ERWEITERE base.html mit BLOCK content
+
+  DEFINIERE .dashboard-header mit Titel "Admin Dashboard" und aktuellem Datum
+
+  FÜR JEDE Statistic IN [Benutzer, Maschinen, Aufträge, Umsatz]:
+    ZEIGE .dashboard-card mit Icon, Bezeichnung und aktuellem Wert
+
+  ERSTELLE Abschnitt "Letzte Aufträge":
+    RENDERE Tabelle mit Spalten [ID, Kunde, Maschine, Status, Datum]
+    FÜR JEDEN Auftrag IN letzte_auftraege: ZEIGE Tabellenzeile
+
+  ERSTELLE Abschnitt "Schnellzugriff":
+    ZEIGE Buttons [Neuer Auftrag, Neue Maschine, Benutzer verwalten]
+
+  WENN kein_auftrag_vorhanden: ZEIGE Hinweistext "Keine Aufträge vorhanden"
+
+ENDE BLOCK content
