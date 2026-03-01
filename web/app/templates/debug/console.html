@@ -1,0 +1,42 @@
+// ─── INITIALISIERUNG ───────────────────────────────────────────
+LADE console.html Template MIT variablen: {titel, log_eintraege, benutzer}
+
+WENN Seite geladen:
+  PRÜFE ob Benutzer == ADMIN
+    WENN NEIN: WEITERLEITEN ZU /403-forbidden
+  INITIALISIERE log_buffer = []
+  VERBINDE WebSocket AN /debug/stream
+
+// ─── LOG-STREAM EMPFANGEN ──────────────────────────────────────
+WENN WebSocket sendet nachricht:
+  PARSE nachricht ALS {zeitstempel, level, quelle, text}
+
+  WENN level == "ERROR":
+    FÄRBE eintrag ROT
+  WENN level == "WARNING":
+    FÄRBE eintrag GELB
+  SONST:
+    FÄRBE eintrag GRAU
+
+  FÜGE eintrag EIN IN log_buffer
+  ZEIGE eintrag IN der Konsolen-Ausgabe
+
+// ─── FILTER & SUCHE ───────────────────────────────────────────
+WENN Benutzer tippt IN suchfeld:
+  FILTERE log_buffer NACH text ENTHÄLT suchbegriff
+  ZEIGE gefilterte_eintraege IN der Ausgabe
+
+// ─── AKTIONEN ─────────────────────────────────────────────────
+WENN Benutzer klickt "Konsole leeren":
+  LEERE log_buffer
+  LEERE Konsolen-Ausgabe
+
+WENN Benutzer klickt "Logs exportieren":
+  KONVERTIERE log_buffer ZU logs.txt
+  STARTE download VON logs.txt
+
+// ─── VERBINDUNGSSTATUS ────────────────────────────────────────
+WENN WebSocket getrennt:
+  ZEIGE warnung = "Verbindung unterbrochen – versuche neu zu verbinden..."
+  WARTE 3 sekunden
+  VERSUCHE WebSocket erneut zu verbinden
