@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Gästebuch – Brecher GmbH{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">📖 Gästebuch</h2>
+
+  <!-- Eintragsformular -->
+  <form method="POST" action="/guestbook" class="mb-5">
+    <div class="mb-3">
+      <label for="name" class="form-label">Dein Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Max Mustermann" required>
+    </div>
+    <div class="mb-3">
+      <label for="message" class="form-label">Deine Nachricht</label>
+      <textarea class="form-control" id="message" name="message" rows="3" placeholder="Tolle Firma!" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Eintrag hinzufügen</button>
+  </form>
+
+  <!-- Einträge anzeigen -->
+  <h4>Bisherige Einträge</h4>
+  {% if entries %}
+    {% for entry in entries %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">{{ entry.name }} – {{ entry.date }}</h6>
+        <p class="card-text">{{ entry.message }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">Noch keine Einträge vorhanden. Sei der Erste! 🎉</p>
+  {% endif %}
+</div>
+{% endblock %}
