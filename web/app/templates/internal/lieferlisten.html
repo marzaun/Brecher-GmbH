@@ -1,0 +1,16 @@
+LADE lieferlisten.html MIT variablen: {lieferlisten, benutzer, datum_filter}
+
+WENN benutzer NICHT eingeloggt:
+  WEITERLEITEN ZU /login
+
+HOLE alle lieferlisten AUS datenbank WO datum == heute
+SORTIERE lieferlisten NACH lieferdatum AUFSTEIGEND
+
+FÜR JEDE lieferliste IN lieferlisten:
+  ZEIGE {lieferschein_nr, kunde, artikel, menge, status}
+
+WENN lieferlisten LEER:
+  ZEIGE meldung = "Keine Lieferungen für heute gefunden."
+
+WENN benutzer klickt "Exportieren":
+  KONVERTIERE lieferlisten ZU lieferliste.pdf UND STARTE download
