@@ -1,0 +1,20 @@
+LADE login.html Template MIT variablen: {titel, fehlermeldung}
+
+WENN Benutzer öffnet /login:
+  ZEIGE Formular MIT feldern: [email, passwort]
+
+WENN Benutzer drückt "Anmelden":
+  LESE email UND passwort AUS dem Formular
+
+  WENN email ODER passwort LEER:
+    ZEIGE fehlermeldung = "Bitte alle Felder ausfüllen"
+
+  SONST:
+    SENDE POST-Anfrage AN /auth/login MIT {email, passwort}
+
+    WENN Antwort == ERFOLG:
+      WEITERLEITEN ZU /dashboard
+
+    SONST:
+      ZEIGE fehlermeldung = "Ungültige Anmeldedaten"
+      
